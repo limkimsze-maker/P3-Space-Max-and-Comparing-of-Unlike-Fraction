@@ -893,6 +893,14 @@
       text-shadow:0 0 20px rgba(114,247,255,.65);
     }
 
+    .endingActions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
     #endingStage{
       position:relative;
       width:min(680px,100%);
@@ -3250,7 +3258,10 @@
           <div class="rFlame"></div>
         </div>
       </div>
-      <button class="coverBtn" id="restartBtn" type="button">Play Again</button>
+      <div class="endingActions">
+        <button class="coverBtn" id="returnHubBtn" type="button">Return to Rocket Hub</button>
+        <button class="pillBtn dark" id="restartBtn" type="button">Play Again</button>
+      </div>
     </div>
   </div>
 
@@ -3349,7 +3360,16 @@
     const endingVideo = $("endingVideo");
     const endingAudio = $("endingAudio");
     const fakeRocket = $("fakeRocket");
+    const returnHubBtn = $("returnHubBtn");
     const restartBtn = $("restartBtn");
+
+    const SPACE_MAX_HUB_URL = "https://limkimsze-maker.github.io/P2-P3-Space-Max-and-the-Lost-Fraction-Rocket-Parts/";
+    const SPACE_MAX_PART_KEY = "space_max_part_p3_compare_order";
+
+    function saveSpaceMaxProgress(){
+      localStorage.setItem(SPACE_MAX_PART_KEY, "collected");
+      localStorage.setItem(SPACE_MAX_PART_KEY + "_completedAt", new Date().toISOString());
+    }
 
     if(helpCard){
       const toggleHelpCard = ()=>{
@@ -4620,6 +4640,7 @@
         if(endingAudio) endingAudio.volume = muted ? 0 : .9;
         if(muted && "speechSynthesis" in window) speechSynthesis.cancel();
       });
+      returnHubBtn.addEventListener("click", ()=>{ location.href = SPACE_MAX_HUB_URL; });
       restartBtn.addEventListener("click", ()=>location.reload());
 
       window.addEventListener("message", (event)=>{
@@ -5165,6 +5186,7 @@
 
     async function completeReactor(){
       reactorComplete = true;
+      saveSpaceMaxProgress();
       quizIndex = QUESTIONS.length;
       perfectRun = QUESTIONS.length;
       updateReactorPill();
